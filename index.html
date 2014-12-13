@@ -6,9 +6,27 @@
     <meta name="description" content=" FILL ME IN ">
     <meta name="author" content=" FILL ME IN ">
     <title>Cameron Pittman: Portfolio</title>
+    
+    <!-- Make google web fonts async with Webfont. FOUT isn't that noticable -->
+    <script>
+      WebFontConfig = {
+        google: {
+          families: ['Open Sans:400,700']
+        }
+      };
 
-    <!-- Hmm, what is the impact of web fonts on speed? Measure it... -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+      (function() {
+        var wf = document.createElement('script');
+        wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+                  '://ajax.googleapis.com/ajax/libs/webfont/1.5.6/webfont.js';
+        wf.type = 'text/javascript';
+        wf.async = 'true';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(wf, s);
+      })();
+    
+    </script>
+
     <!-- Inline style.css to unblock it. All of it is critical to rendering above the fold content -->
     <style>
       html {
