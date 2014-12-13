@@ -9,6 +9,7 @@
 
     <!-- Hmm, what is the impact of web fonts on speed? Measure it... -->
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+    <!-- Inline style.css to unblock it. All of it is critical to rendering above the fold content -->
     <style>
       html {
         font-size: 100%;
@@ -53,10 +54,14 @@
         border-top: 1px solid #ccc;
       }
       footer span { float: right; font-style: italic; }
+      /* Smartphones (portrait) */
+      @media only screen and (max-width: 480px) {
+        body { font-size: 12px;}
+        header p { padding-left: 4.5em;}
+      }
     </style>
     
     <!-- Add media attribute to unblock css -->
-    <link href="css/mobile.css" rel="stylesheet" media="screen and (max-width: 480px)">
     <link href="css/print.css" rel="stylesheet" media="print">
   
     <!-- Mark analytics.js as async --> 
