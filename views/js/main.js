@@ -503,12 +503,23 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
 // Moves the sliding background pizzas based on scroll position
-function updatePositions() {
+function updatePositions(scrollTopVal) {
   frame++;
   window.performance.mark("mark_start_frame");
-
+  function isNum(obj) {
+    return (/^\d*$/).test(obj);
+  }
   var items = document.querySelectorAll(".mover");
-  var getScrollTop = document.body.scrollTop;
+  /* Avoid forced synchrounus layout
+   * Pass 0 for scrollTop when moving pizzas are first generated to avoid 
+   * performing a new layout immediately to query document.body.scrollTop
+  */
+  var getScrollTop;
+  if (isNum(scrollTopVal)) {
+    getScrollTop = scrollTopVal;
+  } else {
+    getScrollTop = document.body.scrollTop;
+  }
   for (var i = 0; i < items.length; i++) {
     var phase = Math.sin(( getScrollTop / 1250) + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + "px";
@@ -530,21 +541,21 @@ window.addEventListener("scroll", updatePositions);
 // Generates the sliding pizzas when the page loads.
 if (document.readyState != "loading") {
   (function() {
-  var cols = 8;
-  var s = 256;
-  //movingPizzas1 only needs to be queried once so take it out of loop
-  var movPizzaDiv = document.querySelector("#movingPizzas1");
-    for (var i = 0; i < 200; i++) {
-      var elem = document.createElement("img");
-      elem.className = "mover";
-      elem.src = "http://i.imgur.com/0FLWlRX.png";
-      elem.style.height = "100px";
-      elem.style.width = "73.333px";
-      elem.basicLeft = (i % cols) * s;
-      elem.style.top = (Math.floor(i / cols) * s) + "px";
-      movPizzaDiv.appendChild(elem);
-    }
-    updatePositions();
+    var cols = 8;
+    var s = 256;
+    //movingPizzas1 only needs to be queried once so take it out of loop
+    var movPizzaDiv = document.querySelector("#movingPizzas1");
+      for (var i = 0; i < 200; i++) {
+        var elem = document.createElement("img");
+        elem.className = "mover";
+        elem.src = "http://i.imgur.com/0FLWlRX.png";
+        elem.style.height = "100px";
+        elem.style.width = "73.333px";
+        elem.basicLeft = (i % cols) * s;
+        elem.style.top = (Math.floor(i / cols) * s) + "px";
+        movPizzaDiv.appendChild(elem);
+      }
+      updatePositions(0);
   }());
 } else {
   document.addEventListener("DOMContentLoaded", function() {
@@ -562,6 +573,6 @@ if (document.readyState != "loading") {
       elem.style.top = (Math.floor(i / cols) * s) + "px";
       movPizzaDiv.appendChild(elem);
     }
-    updatePositions();
+    updatePositions(0);
   });
 }
