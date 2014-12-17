@@ -523,7 +523,11 @@ function updatePositions(scrollTopVal) {
 
   for (var i = 0; i < items.length; i++) {
     var phase = Math.sin(( getScrollTop / 1250) + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + "px";
+    
+    /* Animate using CSS transform: translateX rather than changing the CSS left
+     * value to avoid triggering layout when scrolling
+     */
+    items[i].style.transform = "translateX(" + (100 * phase) + "px)";
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -555,7 +559,7 @@ if (document.readyState != "loading") {
         elem.src = "http://i.imgur.com/0FLWlRX.png";
         elem.style.height = "100px";
         elem.style.width = "73.333px";
-        elem.basicLeft = (i % cols) * s;
+        elem.style.left = ((i % cols) * s) + "px";
         elem.style.top = (Math.floor(i / cols) * s) + "px";
         movPizzaDiv.appendChild(elem);
       }
