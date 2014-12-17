@@ -511,7 +511,7 @@ function updatePositions(scrollTopVal) {
   }
   var items = document.querySelectorAll(".mover");
   /* Avoid forced synchrounus layout
-   * Pass 0 for scrollTop when moving pizzas are first generated to avoid 
+   * Pass 0 for scrollTopVal when moving pizzas are first generated to avoid 
    * performing a new layout immediately to query document.body.scrollTop
   */
   var getScrollTop;
@@ -520,6 +520,7 @@ function updatePositions(scrollTopVal) {
   } else {
     getScrollTop = document.body.scrollTop;
   }
+
   for (var i = 0; i < items.length; i++) {
     var phase = Math.sin(( getScrollTop / 1250) + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + "px";
@@ -539,6 +540,9 @@ function updatePositions(scrollTopVal) {
 window.addEventListener("scroll", updatePositions);
 
 // Generates the sliding pizzas when the page loads.
+/* Need to check when DOM is ready using readyState since DOMContentLoaded
+ * may fire off before main.js loads asynchronously
+ */
 if (document.readyState != "loading") {
   (function() {
     var cols = 8;
