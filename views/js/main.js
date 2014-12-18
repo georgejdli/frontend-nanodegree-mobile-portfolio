@@ -544,43 +544,29 @@ function updatePositions(scrollTopVal) {
 window.addEventListener("scroll", updatePositions);
 
 // Generates the sliding pizzas when the page loads.
-/* Need to check when DOM is ready using readyState since DOMContentLoaded
- * may fire off before main.js loads asynchronously
- */
-if (document.readyState != "loading") {
-  (function() {
-    var cols = 8;
-    var s = 256;
-    //movingPizzas1 only needs to be queried once so take it out of loop
-    var movPizzaDiv = document.querySelector("#movingPizzas1");
-      for (var i = 0; i < 200; i++) {
-        var elem = document.createElement("img");
-        elem.className = "mover";
-        elem.src = "http://i.imgur.com/0FLWlRX.png";
-        elem.style.height = "100px";
-        elem.style.width = "73.333px";
-        elem.style.left = ((i % cols) * s) + "px";
-        elem.style.top = (Math.floor(i / cols) * s) + "px";
-        movPizzaDiv.appendChild(elem);
-      }
-      updatePositions(0);
-  }());
-} else {
-  document.addEventListener("DOMContentLoaded", function() {
-    var cols = 8;
-    var s = 256;
-    //movingPizzas1 only needs to be queried once so take it out of loop
-    var movPizzaDiv = document.querySelector("#movingPizzas1");
+function genMovPizzas() {
+  var cols = 8;
+  var s = 256;
+  //movingPizzas1 only needs to be queried once so take it out of loop
+  var movPizzaDiv = document.querySelector("#movingPizzas1");
     for (var i = 0; i < 200; i++) {
       var elem = document.createElement("img");
       elem.className = "mover";
       elem.src = "http://i.imgur.com/0FLWlRX.png";
       elem.style.height = "100px";
       elem.style.width = "73.333px";
-      elem.basicLeft = (i % cols) * s;
+      elem.style.left = ((i % cols) * s) + "px";
       elem.style.top = (Math.floor(i / cols) * s) + "px";
       movPizzaDiv.appendChild(elem);
     }
     updatePositions(0);
-  });
+  }
+
+/* Need to check when DOM is ready using readyState since DOMContentLoaded
+ * may fire off before main.js loads asynchronously
+ */
+if (document.readyState != "loading") {
+  genMovPizzas();
+} else {
+  document.addEventListener("DOMContentLoaded", genMovPizzas);
 }
