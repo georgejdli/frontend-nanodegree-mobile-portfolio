@@ -380,7 +380,7 @@ var pizzaElementGenerator = function(i) {
   pizzaContainer.id = "pizza" + i;                // gives each pizza element a unique id
   pizzaImageContainer.classList.add("col-md-6");
 
-  pizzaImage.src = "http://i.imgur.com/0FLWlRX.png";
+  pizzaImage.src = "images/pizza.webp";
   pizzaImage.classList.add("img-responsive");
   pizzaImageContainer.appendChild(pizzaImage);
   pizzaContainer.appendChild(pizzaImageContainer);
@@ -552,7 +552,7 @@ function genMovPizzas() {
     for (var i = 0; i < 200; i++) {
       var elem = document.createElement("img");
       elem.className = "mover";
-      elem.src = "http://i.imgur.com/0FLWlRX.png";
+      elem.src = "images/pizza.webp";
       elem.style.height = "100px";
       elem.style.width = "73.333px";
       elem.style.left = ((i % cols) * s) + "px";
@@ -565,7 +565,7 @@ function genMovPizzas() {
 /* Need to check when DOM is ready using readyState since DOMContentLoaded
  * may fire off before main.js loads asynchronously
  */
-if (document.readyState != "loading") {
+ if (document.readyState != "loading") {
   genMovPizzas();
 } else {
   document.addEventListener("DOMContentLoaded", genMovPizzas);
