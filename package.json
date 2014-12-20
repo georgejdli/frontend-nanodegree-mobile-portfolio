@@ -1,0 +1,30 @@
+{
+  "name": "frontend-nanodegree-mobile-portfolio",
+  "devDependencies": {
+    "critical": "^0.5.0",
+    "gulp": "^3.8.10",
+    "gulp-autoprefixer": "^2.0.0",
+    "gulp-cache": "^0.2.4",
+    "gulp-concat": "^2.4.2",
+    "gulp-csso": "^0.2.9",
+    "gulp-if": "^1.2.5",
+    "gulp-imagemin": "^2.0.0",
+    "gulp-load-plugins": "^0.8.0",
+    "gulp-minify-html": "^0.1.7",
+    "gulp-plumber": "^0.6.6",
+    "gulp-rename": "^1.2.0",
+    "gulp-size": "^1.1.0",
+    "gulp-uglify": "^1.0.2",
+    "gulp-uncss": "^0.5.1",
+    "gulp-useref": "^1.0.2",
+    "jpegtran-bin": "https://registry.npmjs.org/jpegtran-bin/-/jpegtran-bin-2.0.2.tgz",
+    "ngrok": "^0.1.98",
+    "psi": "^0.1.6"
+  },
+  "jshintConfig": {
+    "strict": false,
+    "predef": [
+      "console"
+    ]
+  }
+}

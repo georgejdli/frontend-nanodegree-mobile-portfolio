@@ -512,7 +512,7 @@ function updatePositions(scrollTopVal) {
   var items = document.querySelectorAll(".mover");
   /* Avoid forced synchrounus layout
    * Pass 0 for scrollTopVal when moving pizzas are first generated to avoid 
-   * performing a new layout immediately to query document.body.scrollTop
+   * performing a new layout immediately after when querying document.body.scrollTop
   */
   var getScrollTop;
   if (isNum(scrollTopVal)) {
@@ -555,6 +555,7 @@ function genMovPizzas() {
       elem.src = "images/pizza.webp";
       elem.style.height = "100px";
       elem.style.width = "73.333px";
+      //use left attribute instead of basicLeft to set initial position for pizzas
       elem.style.left = ((i % cols) * s) + "px";
       elem.style.top = (Math.floor(i / cols) * s) + "px";
       movPizzaDiv.appendChild(elem);
