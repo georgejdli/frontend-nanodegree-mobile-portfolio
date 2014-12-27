@@ -53,7 +53,7 @@ gulp.task('css', function() {
 
 // Concatenate & Minify JS
 gulp.task('scripts', function() {
-    return gulp.src(src + 'js/*.js')
+    return gulp.src(src + 'js/main.js')
       //.pipe(plumber())
       //.pipe(concat('main.js'))
         .pipe(rename({suffix: '.min'}))
