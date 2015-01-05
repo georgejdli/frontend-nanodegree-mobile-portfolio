@@ -453,8 +453,9 @@ var resizePizzas = function(size) {
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
     var i,
-        randomPizzaContainerDiv = document.querySelectorAll(".randomPizzaContainer");
-    for (i = 0; i < randomPizzaContainerDiv.length; i++) {
+        randomPizzaContainerDiv = document.querySelectorAll(".randomPizzaContainer"),
+        ranDivLen = randomPizzaContainerDiv.length;
+    for (i = 0; i < ranDivLen; i++) {
       var dx = determineDx(randomPizzaContainerDiv[i], size);
       var newwidth = (randomPizzaContainerDiv[i].offsetWidth + dx) + "px";
       randomPizzaContainerDiv[i].style.width = newwidth;
@@ -520,8 +521,9 @@ function updatePositions(scrollTopVal) {
   } else {
     getScrollTop = document.body.scrollTop;
   }
+  var itemsLen = items.length;
 
-  for (var i = 0; i < items.length; i++) {
+  for (var i = 0; i < itemsLen; i++) {
     var phase = Math.sin(( getScrollTop / 1250) + (i % 5));
     
     /* Animate using CSS transform: translateX rather than changing the CSS left
