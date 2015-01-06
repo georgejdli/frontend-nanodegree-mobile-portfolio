@@ -291,16 +291,16 @@ var nouns = ["animals", "everyday", "fantasy", "gross", "horror", "jewelry", "pl
 function generator(adj, noun) {
   var adjectives = getAdj(adj);
   var nouns = getNoun(noun);
-  var randomAdjective = parseInt(Math.random() * adjectives.length);
-  var randomNoun = parseInt(Math.random() * nouns.length);
+  var randomAdjective = parseInt(Math.random() * adjectives.length, 10);
+  var randomNoun = parseInt(Math.random() * nouns.length, 10);
   var name = "The " + adjectives[randomAdjective].capitalize() + " " + nouns[randomNoun].capitalize();
   return name;
 }
 
 // Chooses random adjective and random noun
 function randomName() {
-  var randomNumberAdj = parseInt(Math.random() * adjectives.length);
-  var randomNumberNoun = parseInt(Math.random() * nouns.length);
+  var randomNumberAdj = parseInt(Math.random() * adjectives.length, 10);
+  var randomNumberNoun = parseInt(Math.random() * nouns.length, 10);
   return generator(adjectives[randomNumberAdj], nouns[randomNumberNoun]);
 }
 
@@ -401,7 +401,7 @@ var pizzaElementGenerator = function(i) {
 };
 
 // resizePizzas(size) is called when the slider in the "Our Pizzas" section of the website moves.
-var resizePizzas = function(size) { 
+var resizePizzas = function(size) {
   window.performance.mark("mark_start_resize");   // User Timing API function
 
   // Changes the value for the size of the pizza above the slider
@@ -476,7 +476,8 @@ window.performance.mark("mark_start_generating"); // collect timing data
 // This for-loop actually creates and appends all of the pizzas when the page loads
 // Take pizzasDiv out of for loop. No need to query randomPizzas 97 more times
 var pizzasDiv = document.getElementById("randomPizzas");
-for (var i = 2; i < 100; i++) {  
+
+for (var i = 2; i < 100; i++) {
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -564,7 +565,8 @@ function genMovPizzas() {
   var s = 256;
   //movingPizzas1 only needs to be queried once so take it out of loop
   var movPizzaDiv = document.querySelector("#movingPizzas1");
-    for (var i = 0; i < 200; i++) {
+    //reduce the amount of moving pizza to 32 sinces that's the max that will be visible to the user
+    for (var i = 0; i < 32; i++) {
       var elem = document.createElement("img");
       elem.className = "mover";
       elem.src = "images/pizza.webp";
