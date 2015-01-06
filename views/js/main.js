@@ -469,7 +469,11 @@ var resizePizzas = function(size) {
   window.performance.measure("measure_pizza_resize", "mark_start_resize", "mark_end_resize");
   var timeToResize = window.performance.getEntriesByName("measure_pizza_resize");
   console.log("Time to resize pizzas: " + timeToResize[0].duration + "ms");
+
+  // ADD THE FOLLOWING LINE TO MAKE IT WORK RIGHT:
+  window.performance.clearMeasures('measure_pizza_resize');
 };
+
 
 window.performance.mark("mark_start_generating"); // collect timing data
 
@@ -523,6 +527,7 @@ function requestTick() {
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
 // Moves the sliding background pizzas based on scroll position
+
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
@@ -537,13 +542,16 @@ function updatePositions() {
 
   var itemsLen = items.length;
 
-  for (var i = 0; i < itemsLen; i++) {
-    var phase = Math.sin(( currentScrollYCache) + (i % 5));
-    
-    /* Animate using CSS transform: translateX rather than changing the CSS left
-     * value to avoid triggering layout when scrolling
-     */
-    items[i].style.transform = "translateX(" + (100 * phase) + "px)";
+  //using a while loop to iterate in reverse is faster than using
+  //a for-loop
+  //see http://conceptf1.blogspot.com/2014/01/javascript-best-practices-loop-optimization.html
+  while(itemsLen -= 1) {
+    var phase = Math.sin(( currentScrollYCache) + (itemsLen % 5));
+
+    //Animate using CSS transform: translateX rather than changing the CSS left
+    // value to avoid triggering layout when scrolling
+
+    items[itemsLen].style.transform = "translateX(" + (100 * phase) + "px)";
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
