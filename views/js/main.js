@@ -338,10 +338,11 @@ var selectRandomCrust = function() {
   var randomCrust = pizzaIngredients.crusts[Math.floor((Math.random() * crustsLen))];
   return randomCrust;
 };
-
+/* this function is no longer needed, see makeRandomPizza to see why
 var ingredientItemizer = function(string) {
   return "<li>" + string + "</li>";
 };
+*/
 
 // Returns a string with random pizza ingredients nested inside <li> tags
 var makeRandomPizza = function() {
@@ -358,28 +359,33 @@ var makeRandomPizza = function() {
 
   for (var i = 0; i < numberOfMeats; i++) {
     //pizza = pizza + ingredientItemizer(selectRandomMeat());
-    li.textContent = selectRandomMeat();
-    pizzaFragment.appendChild(li);
+    var liMeat = li.cloneNode(false);
+    liMeat.textContent = selectRandomMeat();
+    pizzaFragment.appendChild(liMeat);
   }
 
   for (var j = 0; j < numberOfNonMeats; j++) {
     //pizza = pizza + ingredientItemizer(selectRandomNonMeat());
-    li.textContent =  selectRandomNonMeat();
-    pizzaFragment.appendChild(li);
+    var liNonMeat = li.cloneNode(false);
+    liNonMeat.textContent =  selectRandomNonMeat();
+    pizzaFragment.appendChild(liNonMeat);
   }
 
   for (var k = 0; k < numberOfCheeses; k++) {
     //pizza = pizza + ingredientItemizer(selectRandomCheese());
-    li.textContent = selectRandomCheese();
-    pizzaFragment.appendChild(li);
+    var liCheese = li.cloneNode(false);
+    liCheese.textContent = selectRandomCheese();
+    pizzaFragment.appendChild(liCheese);
   }
 
   //pizza = pizza + ingredientItemizer(selectRandomSauce());
-  li.textContent = selectRandomSauce();
-  pizzaFragment.appendChild(li);
+  var liSauce = li.cloneNode(false);
+  liSauce.textContent = selectRandomSauce();
+  pizzaFragment.appendChild(liSauce);
   //pizza = pizza + ingredientItemizer(selectRandomCrust());
-  li.textContent = selectRandomCrust();
-  pizzaFragment.appendChild(li);
+  var liCrust = li.cloneNode(false);
+  liCrust.textContent = selectRandomCrust();
+  pizzaFragment.appendChild(liCrust);
   //return pizza;
   return pizzaFragment;
 };
@@ -433,15 +439,16 @@ var resizePizzas = function(size) {
 
   // Changes the value for the size of the pizza above the slider
   function changeSliderLabel(size) {
+    //replace innerHTML with textContent for better performance
     switch(size) {
       case "1":
-        document.querySelector("#pizzaSize").innerHTML = "Small";
+        document.querySelector("#pizzaSize").textContent = "Small";
         return;
       case "2":
-        document.querySelector("#pizzaSize").innerHTML = "Medium";
+        document.querySelector("#pizzaSize").textContent = "Medium";
         return;
       case "3":
-        document.querySelector("#pizzaSize").innerHTML = "Large";
+        document.querySelector("#pizzaSize").textContent = "Large";
         return;
       default:
         console.log("bug in changeSliderLabel");
@@ -481,10 +488,11 @@ var resizePizzas = function(size) {
   function changePizzaSizes(size) {
     var i,
         randomPizzaContainerDiv = document.querySelectorAll(".randomPizzaContainer"),
-        ranDivLen = randomPizzaContainerDiv.length;
+        ranDivLen = randomPizzaContainerDiv.length,
+        dx = determineDx(randomPizzaContainerDiv[1], size),
+        newwidth = (randomPizzaContainerDiv[1].offsetWidth + dx) + "px";
     for (i = 0; i < ranDivLen; i++) {
-      var dx = determineDx(randomPizzaContainerDiv[i], size);
-      var newwidth = (randomPizzaContainerDiv[i].offsetWidth + dx) + "px";
+      //move dx and newwidth out of loop since it will be the same for all pizzas
       randomPizzaContainerDiv[i].style.width = newwidth;
     }
   }
@@ -509,10 +517,22 @@ window.performance.mark("mark_start_generating"); // collect timing data
 var pizzasDiv = document.getElementById("randomPizzas");
 var pizzaDivFragment = document.createDocumentFragment();
 var i = 98;
-while(i--) {
-  pizzaDivFragment.appendChild(pizzaElementGenerator(98 - i + 2));
-}
-pizzasDiv.appendChild(pizzaDivFragment);
+//use requestAnimationFrame to add random pizzas
+//request animation DOES NOT MAKE IT LOAD FASTER
+//the timer can't time to properly because rAF delays the action
+//this is proof!!!
+window.requestAnimationFrame(function() {
+  window.performance.mark("mark_start_rafGen");
+  while(i--) {
+    pizzaDivFragment.appendChild(pizzaElementGenerator(98 - i + 2));
+  }
+  pizzasDiv.appendChild(pizzaDivFragment);
+  window.performance.mark("mark_end_rafGen");
+  window.performance.measure("measure_pizza_rafGen", "mark_start_rafGen","mark_end_rafGen");
+  var timeToRafGenerate = window.performance.getEntriesByName("measure_pizza_rafGen");
+  console.log("Time to generate pizzas on load with rAF: " + timeToRafGenerate[0].duration + "ms");
+});
+
 // User Timing API again. These measurements tell you how long it took to generate the initial pizzas
 window.performance.mark("mark_end_generating");
 window.performance.measure("measure_pizza_generation", "mark_start_generating", "mark_end_generating");
@@ -546,7 +566,7 @@ function onScroll() {
 
 function requestTick() {
   if(!ticking) {
-    requestAnimationFrame(updatePositions);
+    window.requestAnimationFrame(updatePositions);
   }
   ticking = true;
 }
@@ -564,8 +584,7 @@ function updatePositions() {
   // capture the next onScroll
   ticking = false;
 
-  var currentScrollY = latestKnownScrollY;
-  var currentScrollYCache = currentScrollY / 1250;
+  var currentScrollYCache = latestKnownScrollY / 1250;
   var items = document.querySelectorAll(".mover");
 
   var itemsLen = items.length;

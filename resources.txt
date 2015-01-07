@@ -9,3 +9,6 @@ This reduces the amount work the browser does to animate the pizzas.
 
 -Optimizing loops in JS
     -http://conceptf1.blogspot.com/2014/01/javascript-best-practices-loop-optimization.html
+
+-Using requestAnimationFrame to debounce scroll events
+    - http://www.html5rocks.com/en/tutorials/speed/animations/
