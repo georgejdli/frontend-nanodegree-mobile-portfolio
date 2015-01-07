@@ -285,7 +285,9 @@ function getNoun(y) {
 }
 
 var adjectives = ["dark", "color", "whimsical", "shiny", "noise", "apocalyptic", "insulting", "praise", "scientific"];  // types of adjectives for pizza titles
+var adjLen = adjectives.length;
 var nouns = ["animals", "everyday", "fantasy", "gross", "horror", "jewelry", "places", "scifi"];                        // types of nouns for pizza titles
+var nounsLen = nouns.length;
 
 // Generates random numbers for getAdj and getNoun functions and returns a new pizza name
 function generator(adj, noun) {
@@ -299,34 +301,41 @@ function generator(adj, noun) {
 
 // Chooses random adjective and random noun
 function randomName() {
-  var randomNumberAdj = parseInt(Math.random() * adjectives.length, 10);
-  var randomNumberNoun = parseInt(Math.random() * nouns.length, 10);
+  var randomNumberAdj = parseInt(Math.random() * adjLen, 10);
+  var randomNumberNoun = parseInt(Math.random() * nounsLen, 10);
   return generator(adjectives[randomNumberAdj], nouns[randomNumberNoun]);
 }
 
+
+//cache the length variables for items in pizzaIngredients
+var nonMeatsLen = pizzaIngredients.nonMeats.length,
+    meatsLen = pizzaIngredients.meats.length,
+    cheeseLen = pizzaIngredients.cheeses.length,
+    saucesLen = pizzaIngredients.sauces.length,
+    crustsLen = pizzaIngredients.crusts.length;
 // These functions return a string of a random ingredient from each respective category of ingredients.
 var selectRandomMeat = function() {
-  var randomMeat = pizzaIngredients.meats[Math.floor((Math.random() * pizzaIngredients.meats.length))];
+  var randomMeat = pizzaIngredients.meats[Math.floor((Math.random() * meatsLen))];
   return randomMeat;
 };
 
 var selectRandomNonMeat = function() {
-  var randomNonMeat = pizzaIngredients.nonMeats[Math.floor((Math.random() * pizzaIngredients.nonMeats.length))];
+  var randomNonMeat = pizzaIngredients.nonMeats[Math.floor((Math.random() * nonMeatsLen))];
   return randomNonMeat;
 };
 
 var selectRandomCheese = function() {
-  var randomCheese = pizzaIngredients.cheeses[Math.floor((Math.random() * pizzaIngredients.cheeses.length))];
+  var randomCheese = pizzaIngredients.cheeses[Math.floor((Math.random() * cheeseLen))];
   return randomCheese;
 };
 
 var selectRandomSauce = function() {
-  var randomSauce = pizzaIngredients.sauces[Math.floor((Math.random() * pizzaIngredients.sauces.length))];
+  var randomSauce = pizzaIngredients.sauces[Math.floor((Math.random() * saucesLen))];
   return randomSauce;
 };
 
 var selectRandomCrust = function() {
-  var randomCrust = pizzaIngredients.crusts[Math.floor((Math.random() * pizzaIngredients.crusts.length))];
+  var randomCrust = pizzaIngredients.crusts[Math.floor((Math.random() * crustsLen))];
   return randomCrust;
 };
 
@@ -336,28 +345,43 @@ var ingredientItemizer = function(string) {
 
 // Returns a string with random pizza ingredients nested inside <li> tags
 var makeRandomPizza = function() {
-  var pizza = "";
-
+  //Avoid using innerHTML() since it adds extra time for loading
+  //due to so many Parse HTML events
+  //Using document fragments and element creation instead of
+  //creating one large string of text to use with innerHTML()
+  //var pizza = "";
+  var pizzaFragment = document.createDocumentFragment();
+  var li = document.createElement('li');
   var numberOfMeats = Math.floor((Math.random() * 4));
   var numberOfNonMeats = Math.floor((Math.random() * 3));
   var numberOfCheeses = Math.floor((Math.random() * 2));
 
   for (var i = 0; i < numberOfMeats; i++) {
-    pizza = pizza + ingredientItemizer(selectRandomMeat());
+    //pizza = pizza + ingredientItemizer(selectRandomMeat());
+    li.textContent = selectRandomMeat();
+    pizzaFragment.appendChild(li);
   }
 
-  for (var i = 0; i < numberOfNonMeats; i++) {
-    pizza = pizza + ingredientItemizer(selectRandomNonMeat());
+  for (var j = 0; j < numberOfNonMeats; j++) {
+    //pizza = pizza + ingredientItemizer(selectRandomNonMeat());
+    li.textContent =  selectRandomNonMeat();
+    pizzaFragment.appendChild(li);
   }
 
-  for (var i = 0; i < numberOfCheeses; i++) {
-    pizza = pizza + ingredientItemizer(selectRandomCheese());
+  for (var k = 0; k < numberOfCheeses; k++) {
+    //pizza = pizza + ingredientItemizer(selectRandomCheese());
+    li.textContent = selectRandomCheese();
+    pizzaFragment.appendChild(li);
   }
 
-  pizza = pizza + ingredientItemizer(selectRandomSauce());
-  pizza = pizza + ingredientItemizer(selectRandomCrust());
-
-  return pizza;
+  //pizza = pizza + ingredientItemizer(selectRandomSauce());
+  li.textContent = selectRandomSauce();
+  pizzaFragment.appendChild(li);
+  //pizza = pizza + ingredientItemizer(selectRandomCrust());
+  li.textContent = selectRandomCrust();
+  pizzaFragment.appendChild(li);
+  //return pizza;
+  return pizzaFragment;
 };
 
 // returns a DOM element for each pizza
@@ -389,11 +413,14 @@ var pizzaElementGenerator = function(i) {
   pizzaDescriptionContainer.classList.add("col-md-6");
 
   pizzaName = document.createElement("h4");
-  pizzaName.innerHTML = randomName();
+  // use .textContent instead of .innerHTML to avoid Parse HTML events
+  pizzaName.textContent = randomName();
   pizzaDescriptionContainer.appendChild(pizzaName);
 
   ul = document.createElement("ul");
-  ul.innerHTML = makeRandomPizza();
+  //makeRandomPizza code modified to use textContent instead of innerHTML
+  ul.appendChild(makeRandomPizza());
+  //ul.innerHTML = makeRandomPizza();
   pizzaDescriptionContainer.appendChild(ul);
   pizzaContainer.appendChild(pizzaDescriptionContainer);
 
@@ -480,11 +507,12 @@ window.performance.mark("mark_start_generating"); // collect timing data
 // This for-loop actually creates and appends all of the pizzas when the page loads
 // Take pizzasDiv out of for loop. No need to query randomPizzas 97 more times
 var pizzasDiv = document.getElementById("randomPizzas");
-
-for (var i = 2; i < 100; i++) {
-  pizzasDiv.appendChild(pizzaElementGenerator(i));
+var pizzaDivFragment = document.createDocumentFragment();
+var i = 98;
+while(i--) {
+  pizzaDivFragment.appendChild(pizzaElementGenerator(98 - i + 2));
 }
-
+pizzasDiv.appendChild(pizzaDivFragment);
 // User Timing API again. These measurements tell you how long it took to generate the initial pizzas
 window.performance.mark("mark_end_generating");
 window.performance.measure("measure_pizza_generation", "mark_start_generating", "mark_end_generating");
@@ -545,7 +573,7 @@ function updatePositions() {
   //using a while loop to iterate in reverse is faster than using
   //a for-loop
   //see http://conceptf1.blogspot.com/2014/01/javascript-best-practices-loop-optimization.html
-  while(itemsLen -= 1) {
+  while(itemsLen--) {
     var phase = Math.sin(( currentScrollYCache) + (itemsLen % 5));
 
     //Animate using CSS transform: translateX rather than changing the CSS left
