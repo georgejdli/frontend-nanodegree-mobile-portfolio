@@ -6,6 +6,7 @@
 - for pizza.html run the minified version pizza.min.html when testing performance
 - Here is a live version of the project:
     http://georgejdli.github.io/frontend-nanodegree-mobile-portfolio/
+-pizza.html has been optimized for Page Speed Insights as well
 
 ### Tools used
 - Python SimpleHTTPServer to host a local server
