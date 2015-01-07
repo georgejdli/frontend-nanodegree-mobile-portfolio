@@ -4,6 +4,8 @@
 ### Running the optimized pages
 - Google Chrome is required to render the html pages correctly
 - for pizza.html run the minified version pizza.min.html when testing performance
+- Here is a live version of the project:
+    http://georgejdli.github.io/frontend-nanodegree-mobile-portfolio/
 
 ### Tools used
 - Python SimpleHTTPServer to host a local server
